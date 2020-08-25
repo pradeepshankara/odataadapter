@@ -3,12 +3,14 @@ package com.test.odataadapter.service;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.*;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@Component
 public class EdmProvider extends CsdlAbstractEdmProvider {
     // Service Namespace
     public static final String NAMESPACE = "OData.Demo";
@@ -23,6 +25,13 @@ public class EdmProvider extends CsdlAbstractEdmProvider {
 
     // Entity Set Names
     public static final String ES_PRODUCTS_NAME = "Products";
+
+    private List<CsdlSchema> schemaList = new ArrayList<>();
+    private List<CsdlEntitySet> entitySets = new ArrayList<>();
+    private CsdlEntityContainer csdlEntityContainer = new CsdlEntityContainer();
+
+
+
 
     @Override
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) {
@@ -71,15 +80,14 @@ public class EdmProvider extends CsdlAbstractEdmProvider {
     public CsdlEntityContainer getEntityContainer() {
 
         // create EntitySets
-        List<CsdlEntitySet> entitySets = new ArrayList<CsdlEntitySet>();
+        entitySets = new ArrayList<CsdlEntitySet>();
         entitySets.add(getEntitySet(CONTAINER, ES_PRODUCTS_NAME));
 
         // create EntityContainer
-        CsdlEntityContainer entityContainer = new CsdlEntityContainer();
-        entityContainer.setName(CONTAINER_NAME);
-        entityContainer.setEntitySets(entitySets);
+        csdlEntityContainer.setName(CONTAINER_NAME);
+        csdlEntityContainer.setEntitySets(entitySets);
 
-        return entityContainer;
+        return csdlEntityContainer;
     }
 
     @Override
@@ -96,12 +104,9 @@ public class EdmProvider extends CsdlAbstractEdmProvider {
 
         // add EntityContainer
         schema.setEntityContainer(getEntityContainer());
+        schemaList.add(schema);
 
-        // finally
-        List<CsdlSchema> schemas = new ArrayList<CsdlSchema>();
-        schemas.add(schema);
-
-        return schemas;
+        return schemaList;
     }
 
     @Override

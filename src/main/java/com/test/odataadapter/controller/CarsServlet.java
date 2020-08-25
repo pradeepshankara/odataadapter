@@ -3,7 +3,6 @@ package com.test.odataadapter.controller;
 import com.test.odataadapter.service.CarsEdmProvider;
 import com.test.odataadapter.service.EdmProvider;
 import com.test.odataadapter.service.HandlerImpl;
-import com.test.odataadapter.service.Processor;
 import org.apache.olingo.commons.api.edmx.EdmxReference;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
@@ -25,6 +24,7 @@ public class CarsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(CarsServlet.class);
     ODataHttpHandler handler;
+
     public CarsServlet(){
         //handler = HandlerImpl.build();
     }

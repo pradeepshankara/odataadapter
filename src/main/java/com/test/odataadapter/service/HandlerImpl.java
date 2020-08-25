@@ -8,21 +8,26 @@ import org.apache.olingo.server.api.debug.DebugSupport;
 import org.apache.olingo.server.api.etag.CustomETagSupport;
 import org.apache.olingo.server.api.processor.Processor;
 import org.apache.olingo.server.api.serializer.CustomContentTypeSupport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
+
 public class HandlerImpl implements ODataHttpHandler {
     static Logger logger = LogManager.getLogger(HandlerImpl.class);
     ODataHttpHandler oDataHttpHandler;
     public ODataHttpHandler build(){
         OData odata = OData.newInstance();
-        ServiceMetadata edm1 = odata.createServiceMetadata(new CarsEdmProvider(), new ArrayList<EdmxReference>());
-        oDataHttpHandler = odata.createHandler(edm1);
-        com.test.odataadapter.service.Processor processor = new com.test.odataadapter.service.Processor();
+        ServiceMetadata serviceMetadata = odata.createServiceMetadata(new CarsEdmProvider(), new ArrayList<EdmxReference>());
+        oDataHttpHandler = odata.createHandler(serviceMetadata);
+        EdmProvider edmProvider = new EdmProvider();
+        com.test.odataadapter.service.GatewayEntityProcessor processor = new com.test.odataadapter.service.GatewayEntityProcessor(odata,serviceMetadata,edmProvider);
+        com.test.odataadapter.service.GatewayCollectionProcessor gatewayCollectionProcessor = new com.test.odataadapter.service.GatewayCollectionProcessor(odata,serviceMetadata,edmProvider);
         oDataHttpHandler.register(processor);
+        oDataHttpHandler.register(gatewayCollectionProcessor);
         return oDataHttpHandler;
     }
 
